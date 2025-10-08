@@ -1,0 +1,142 @@
+==========================================================================================================================================================
+                                                        FIREWALL CONFIGURATION STEPS
+==========================================================================================================================================================
+
+Task: Configure and Test a Local Firewall Rule
+Analyst: Aman Rajak
+Date: 2025-09-26
+
+System Used:
+[X] Linux (UFW)
+[ ] Windows
+
+Objective:
+To create, test, and verify firewall rules that block insecure services (Telnet - port 23) and allow secure services (SSH - port 22). This task demonstrates how firewall rules control inbound and outbound traffic.
+
+--------------------------------------------------------------------------------------------------------------------------------
+STEP 1: CHECKED FIREWALL STATUS
+--------------------------------------------------------------------------------------------------------------------------------
+Command Used:
+``` sudo ufw status ```
+
+Description:
+This command checks whether the firewall (UFW) is active or inactive and lists any
+existing rules.
+
+Observation:
+- The firewall was already active.
+- No previous rule was blocking port 23 at the start of the test.
+
+Example Output:
+``` Status: active
+    To                         Action      From
+    --                         ------      ----
+    22/tcp                     ALLOW       Anywhere
+```
+--------------------------------------------------------------------------------------------------------------------------------
+STEP 2: CREATED RULE TO BLOCK TELNET (PORT 23)
+--------------------------------------------------------------------------------------------------------------------------------
+Command Used:
+``` sudo ufw deny 23 ```
+
+Description:
+This command blocks all incoming and outgoing traffic that uses TCP port 23 (Telnet).
+Telnet is insecure because it sends login credentials in plain text.
+
+Observation:
+- Rule was successfully added for both IPv4 and IPv6.
+- The updated status displayed a "DENY" action for port 23.
+
+Example Output:
+``` Rule added
+    Rule added (v6)
+```
+Verification:
+``` sudo ufw status
+    To                         Action      From
+    --                         ------      ----
+    22/tcp                     ALLOW       Anywhere
+    23/tcp                     DENY        Anywhere
+```
+--------------------------------------------------------------------------------------------------------------------------------
+STEP 3: VERIFIED BLOCKING
+--------------------------------------------------------------------------------------------------------------------------------
+Test Command:
+``` telnet localhost 23 ```
+
+Description:
+Attempted to open a Telnet connection to localhost on port 23.
+
+Expected Result:
+Connection should fail because the firewall is blocking port 23.
+
+Actual Result:
+The connection attempt was denied, confirming the firewall rule was functioning
+correctly.
+
+Additional Verification:
+    sudo ufw status numbered
+This displayed the rule list with numeric order for easier reference or deletion.
+
+--------------------------------------------------------------------------------------------------------------------------------
+STEP 4: ALLOWED SSH (PORT 22)
+--------------------------------------------------------------------------------------------------------------------------------
+Command Used:
+``` sudo ufw allow 22 ```
+
+Description:
+Allowed SSH connections (port 22) so that secure remote management remains possible.
+SSH encrypts all communication and is the recommended alternative to Telnet.
+
+Observation:
+- Rule was added successfully.
+- Verified using "sudo ufw status" that both SSH (allowed) and Telnet (denied) rules
+  coexisted correctly.
+
+Example Output:
+``` To                         Action      From
+    --                         ------      ----
+    22/tcp                     ALLOW       Anywhere
+    23/tcp                     DENY        Anywhere
+```
+--------------------------------------------------------------------------------------------------------------------------------
+STEP 5: DELETED THE TELNET BLOCK RULE
+--------------------------------------------------------------------------------------------------------------------------------
+Command Used:
+``` sudo ufw delete deny 23 ```
+
+Description:
+Removed the temporary rule that was blocking port 23 after testing was complete.
+
+Observation:
+- UFW prompted for confirmation before deleting.
+- Once deleted, the firewall returned to its normal configuration.
+- Verified that only the SSH (port 22) rule remained.
+
+Example Output:
+``` Deleting:
+    deny 23/tcp
+    Proceed with operation (y|n)? y
+    Rule deleted
+```
+--------------------------------------------------------------------------------------------------------------------------------
+RESULT AND SUMMARY
+--------------------------------------------------------------------------------------------------------------------------------
+- Firewall successfully blocked port 23 (Telnet) as configured.
+- SSH (port 22) was correctly allowed for secure remote access.
+- The rules functioned as expected and were easily managed through UFW.
+- Test confirmed that Linux UFW is effective for managing inbound and outbound rules
+  through simple commands.
+
+--------------------------------------------------------------------------------------------------------------------------------
+CONCLUSION
+--------------------------------------------------------------------------------------------------------------------------------
+This practical task demonstrated:
+- How to create, verify, and remove firewall rules using UFW.
+- The importance of blocking insecure services (Telnet).
+- How to maintain secure communication channels (SSH).
+- How firewall configuration provides the first layer of defense
+  against unauthorized access.
+
+End of File
+==========================================================================================================================================================
