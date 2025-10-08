@@ -3,8 +3,11 @@ Firewall Configuration Report
 ==============================================================
 
 Analyst: Aman Rajak
+
 Date: 2025-09-26
+
 Task: Setup and Use a Firewall
+
 Platform: Windows / Linux (UFW)
 
 --------------------------------------------------------------
